@@ -35,3 +35,11 @@ export const editTask = async (todo) => {
     const updatedToDo = await response.json();
     return updatedToDo;
 }
+
+export const removeTask = async (id) => {
+    let tUrl = url.concat("/tasks/");
+    tUrl = tUrl.concat(id);
+    await fetch(tUrl, {
+        method: "DELETE",
+    })
+}

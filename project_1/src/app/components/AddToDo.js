@@ -64,7 +64,7 @@ export default function AddToDo(tasks) {
                 center={content}
             ></Toolbar>
             <Dialog header="Add New Task" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-                <form onSubmit={(e) => adNewToDo(e)} method="POST">
+                <form onSubmit={(e) => addNewToDo(e)} method="POST">
                     <div className="p-inputgroup flex-1">
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-star"></i>

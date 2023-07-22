@@ -1,19 +1,9 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "job123",
-      "text": "job1123"
-    },
-    {
       "id": "2",
-      "title": "job1",
-      "text": "job2"
-    },
-    {
-      "id": "3",
-      "title": "job1",
-      "text": "job3"
+      "title": "study math",
+      "text": "go study map "
     },
     {
       "id": "5fca75",
@@ -22,13 +12,18 @@
     },
     {
       "id": "ca0bf6",
-      "title": "asdasd",
+      "title": "play fm",
       "text": "sadasdasd"
     },
     {
-      "id": "926ebf",
-      "title": "asdasdasdasdassdasd",
-      "text": "asdasdasdadasadasdasdasdas"
+      "id": "10f980",
+      "title": "Study yks",
+      "text": "you have no time"
+    },
+    {
+      "id": "ee36de",
+      "title": "play elden ring",
+      "text": "praise the elden lord"
     }
   ]
 }

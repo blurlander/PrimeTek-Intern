@@ -1,15 +1,16 @@
 'use client'
 
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Toolbar } from 'primereact/toolbar';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { DataView } from 'primereact/dataview';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from "primereact/inputtextarea";
 import { useRouter } from "next/navigation";
-import { editTask } from "../api";
+import { editTask, removeTask } from "../api";
 
 
 
@@ -19,7 +20,9 @@ import { editTask } from "../api";
 
 const ToDoList = (props) => {
 
+    const toast = useRef(null);
     const [editVisible, setEditVisible] = useState(false);
+    const [delVisible, setDelVisible] = useState(false);
     const [editValue, setEditValue] = useState('');
     const [editTitle, setEditTitle] = useState('');
     const [editId, setEditId] = useState('');
@@ -46,23 +49,13 @@ const ToDoList = (props) => {
     const removeToDo = async (e) => {
         e.preventDefault;
 
-        console.log(newTitle);
-        console.log(value);
-        let id = uuid();
-        console.log(id);
-
-        await addNewTask({
-            id: id.slice(0, 6).toString(),
-            title: newTitle,
-            text: value
-        })
-        setTitle("");
-        setValue("");
-        setVisible(false);
+        await removeTask(editId)
+        setEditId("");
+        setDelVisible(false);
         router.refresh();
 
-
     };
+
 
     const itemTemplate = (task) => {
         return (
@@ -81,7 +74,7 @@ const ToDoList = (props) => {
                             <Button icon="pi pi-pencil" onClick={() => { setEditVisible(true), setEditValue(task.text), setEditTitle(task.title), setEditId(task.id)}} rounded severity="secondary" aria-label="Edit" />
                         </div>
                         <div class="absolute right-0 flex align-items-center justify-content-center w-4rem h-4rem">
-                            <Button icon="pi pi-times" rounded severity="danger" aria-label="Remove" />
+                            <Button icon="pi pi-times" onClick={() => { setEditId(task.id),setDelVisible(true)}} rounded severity="danger" aria-label="Remove" />
                         </div>
                     </div>
                 </div>
@@ -89,6 +82,8 @@ const ToDoList = (props) => {
             </div>
         );
     };
+
+
 
 
 
@@ -111,6 +106,15 @@ const ToDoList = (props) => {
                     <Button type="submit" label="Submit" icon="pi pi-check" />
                 </form>
             </Dialog>
+
+            <Dialog header="Remove Task" visible={delVisible} style={{ width: '25vw' }} onHide={() => setDelVisible(false)}>
+                <form onSubmit={(e) => removeToDo(e)} method="POST">
+                    <h3>Do you want to delete this task?</h3>
+                    <br></br>
+                    <Button type="submit" label="Yes" icon="pi pi-check" />
+                </form>
+            </Dialog>
+
         </div>
 
     );
