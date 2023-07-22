@@ -5,8 +5,9 @@ import AddToDo from "./components/AddToDo";
 
 export default async function Home() {
   var tasks = await getAllToDos();
-  console.log(tasks)
+  
 
+  
   return (
     <main className="flex justify-content-center">
 

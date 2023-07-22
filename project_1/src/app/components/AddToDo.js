@@ -8,12 +8,15 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from "primereact/inputtextarea";
 import { addNewTask } from "../api";
+import { useRouter } from "next/navigation";
+import { v4 as uuid } from 'uuid';
 
 export default function AddToDo(tasks) {
     //const router = useRouter();
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState('');
     const [newTitle, setTitle] = useState('');
+    const router = useRouter();
     const items = [
         {
             label: 'Add',
@@ -32,17 +35,21 @@ export default function AddToDo(tasks) {
 
     const  addNewToDo =  async (e) => {
         e.preventDefault;
+
         console.log(newTitle);
         console.log(value);
+        let id = uuid();
+        console.log(id);
 
         await addNewTask({
-            id: "31",
+            id: id.slice(0,6).toString(),
             title: newTitle ,
             text: value
         })
         setTitle("");
         setValue("");
         setVisible(false);
+        router.refresh();
     
 
     }
