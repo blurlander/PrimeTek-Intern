@@ -1,54 +1,116 @@
 'use client'
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+
+import React, { useState } from "react";
 import { Button } from 'primereact/button';
+import { Toolbar } from 'primereact/toolbar';
 import { DataView } from 'primereact/dataview';
-import { Card } from 'primereact/card';
-import { Rating } from 'primereact/rating';
-import { Tag } from 'primereact/tag';
-import CustomButton from './CustomButton';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from "primereact/inputtextarea";
+import { useRouter } from "next/navigation";
+import { editTask } from "../api";
 
 
-const header = (
-    <img alt="Card" src="https://primefaces.org/cdn/primereact/images/usercard.png" />
-);
-const footer = (
-    <div className="flex flex-wrap justify-content-end gap-2">
-        <Button label="Save" icon="pi pi-check" />
-        <Button label="Cancel" icon="pi pi-times" className="p-button-outlined p-button-secondary" />
-    </div>
-);
 
 
-const itemTemplate = (task) => {
-    return (
-        <div className="col-12">
-            <div className="flex flex-column xl:flex-row xl:align-items-center p-4 gap-4">
-                <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                    <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-                        <div className="text-2xl font-bold text-900">{task.title}</div>
-                        <div className="flex align-items-center justify-content-between gap-3">
-                            <span className="flex align-items-center gap-2">
-                                <i className="pi pi-tag"></i>
-                                <span className="font-semibold">{task.text}</span>
-                            </span>
-                        </div>
-                        <CustomButton></CustomButton>
-                    </div>
-                    
 
-                </div>
-            </div>
-        </div>
-    );
-};
 
 
 const ToDoList = (props) => {
+
+    const [editVisible, setEditVisible] = useState(false);
+    const [editValue, setEditValue] = useState('');
+    const [editTitle, setEditTitle] = useState('');
+    const [editId, setEditId] = useState('');
+    const router = useRouter();
+
+
+
+    const editToDo = async (e) => {
+        e.preventDefault;
+
+        await editTask({
+            id: editId,
+            title: editTitle,
+            text: editValue
+
+        })
+        setEditTitle("");
+        setEditValue("");
+        setEditId("");
+        setEditVisible(false);
+        router.refresh();
+    };
+
+    const removeToDo = async (e) => {
+        e.preventDefault;
+
+        console.log(newTitle);
+        console.log(value);
+        let id = uuid();
+        console.log(id);
+
+        await addNewTask({
+            id: id.slice(0, 6).toString(),
+            title: newTitle,
+            text: value
+        })
+        setTitle("");
+        setValue("");
+        setVisible(false);
+        router.refresh();
+
+
+    };
+
+    const itemTemplate = (task) => {
+        return (
+            <div className='col-12'>
+                <div class="flex flex-wrap gap-3 justify-content-between" key={task.id}>
+                    <div class='relative  w-12rem h-9rem mx-3 my-3 md:my-0'>
+                        <div class='absolute  top-0 left-0 flex w-12rem h-4rem'>
+                            <h3>{task.title}</h3>
+                        </div>
+                        <div class="absolute bottom-0 left-0 flex w-12rem h-4rem">
+                            {task.text}
+                        </div>
+                    </div>
+                    <div class="relative w-9rem h-9rem mx-3 my-3 md:my-0 border-round">
+                        <div class="absolute right-50 flex align-items-center justify-content-center w-4rem h-4rem">
+                            <Button icon="pi pi-pencil" onClick={() => { setEditVisible(true), setEditValue(task.text), setEditTitle(task.title), setEditId(task.id)}} rounded severity="secondary" aria-label="Edit" />
+                        </div>
+                        <div class="absolute right-0 flex align-items-center justify-content-center w-4rem h-4rem">
+                            <Button icon="pi pi-times" rounded severity="danger" aria-label="Remove" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        );
+    };
+
+
+
+
+
     return (
         <div className="flex justify-content-center align-items-start">
             <DataView value={props.tasks} itemTemplate={itemTemplate} />
+
+            <Dialog header="Edit Task" visible={editVisible} style={{ width: '50vw' }} onHide={() => setEditVisible(false)}>
+                <form onSubmit={(e) => editToDo(e)} method="POST">
+                    <div className="p-inputgroup flex-1">
+                        <span className="p-inputgroup-addon">
+                            <i className="pi pi-star"></i>
+                        </span>
+                        <InputText placeholder={editTitle} value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+                    </div>
+                    <br></br>
+                    <InputTextarea autoResize placeholder={editValue} value={editValue} onChange={(e) => setEditValue(e.target.value)} rows={10} cols={91} />
+                    <Button type="submit" label="Submit" icon="pi pi-check" />
+                </form>
+            </Dialog>
         </div>
 
     );

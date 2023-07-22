@@ -10,7 +10,7 @@ export default function CustomButton() {
     const items = [
         {
             label: 'Update',
-            icon: 'pi pi-cog',
+            icon: 'pi pi-pencil',
             command: () => {
                 toast.current.show({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
             }
@@ -25,11 +25,9 @@ export default function CustomButton() {
     ];
 
     return (
-        <div className="card">
-            <div style={{ position: 'static', height: '250px' }}>
-                <Toast ref={toast} />
-                <SpeedDial model={items} direction="up" transitionDelay={80} showIcon="pi pi-cog" hideIcon="pi pi-times" buttonClassName="p-button-outlined" />
-            </div>
+        <div>
+            <Toast ref={toast} />
+            <SpeedDial model={items} direction="left" transitionDelay={80} showIcon="pi pi-cog" hideIcon="pi pi-times" buttonClassName="p-button-outlined" />
         </div>
     )
 }
