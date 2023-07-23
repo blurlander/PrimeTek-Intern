@@ -47,33 +47,30 @@ const ToDoList = (props) => {
     };
 
     const removeToDo = async (e) => {
-        e.preventDefault;
-
         await removeTask(editId)
         setEditId("");
         setDelVisible(false);
         router.refresh();
-
     };
 
 
     const itemTemplate = (task) => {
         return (
             <div className='col-12'>
-                <div class="flex flex-wrap gap-3 justify-content-between" key={task.id}>
-                    <div class='relative  w-12rem h-9rem mx-3 my-3 md:my-0'>
-                        <div class='absolute  top-0 left-0 flex w-12rem h-4rem'>
+                <div className="flex flex-wrap gap-3 justify-content-between" key={task.id}>
+                    <div className='relative  w-12rem h-9rem mx-3 my-3 md:my-0'>
+                        <div className='absolute  top-0 left-0 flex w-12rem h-4rem'>
                             <h3>{task.title}</h3>
                         </div>
-                        <div class="absolute bottom-0 left-0 flex w-12rem h-4rem">
+                        <div className="absolute bottom-0 left-0 flex w-12rem h-4rem">
                             {task.text}
                         </div>
                     </div>
-                    <div class="relative w-9rem h-9rem mx-3 my-3 md:my-0 border-round">
-                        <div class="absolute right-50 flex align-items-center justify-content-center w-4rem h-4rem">
+                    <div className="relative w-9rem h-9rem mx-3 my-3 md:my-0 border-round">
+                        <div className="absolute right-50 flex align-items-center justify-content-center w-4rem h-4rem">
                             <Button icon="pi pi-pencil" onClick={() => { setEditVisible(true), setEditValue(task.text), setEditTitle(task.title), setEditId(task.id)}} rounded severity="secondary" aria-label="Edit" />
                         </div>
-                        <div class="absolute right-0 flex align-items-center justify-content-center w-4rem h-4rem">
+                        <div className="absolute right-0 flex align-items-center justify-content-center w-4rem h-4rem">
                             <Button icon="pi pi-times" onClick={() => { setEditId(task.id),setDelVisible(true)}} rounded severity="danger" aria-label="Remove" />
                         </div>
                     </div>
@@ -111,7 +108,11 @@ const ToDoList = (props) => {
                 <form onSubmit={(e) => removeToDo(e)} method="POST">
                     <h3>Do you want to delete this task?</h3>
                     <br></br>
+                    <div className="flex justify-content-between">
                     <Button type="submit" label="Yes" icon="pi pi-check" />
+                    <Button type="button" onClick={() => setDelVisible(false)} severity="danger" label="No" icon="pi pi-times" />
+                    </div>
+
                 </form>
             </Dialog>
 

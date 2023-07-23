@@ -59,7 +59,7 @@ export default function AddToDo(tasks) {
         <div className="card">
             <Toolbar
                 pt={{
-                    root: { style: { background: 'linear-gradient(to right, #8e2de2, #4a00e0)', borderRadius: '24px' } }
+                    root: { style: {borderRadius: '24px' }, className: "surface-card" }
                 }}
                 center={content}
             ></Toolbar>

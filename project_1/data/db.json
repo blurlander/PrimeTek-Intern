@@ -1,29 +1,19 @@
 {
   "tasks": [
     {
-      "id": "2",
-      "title": "study math",
-      "text": "go study map "
-    },
-    {
-      "id": "5fca75",
-      "title": "efefef",
-      "text": "efefef"
-    },
-    {
       "id": "ca0bf6",
       "title": "play fm",
       "text": "sadasdasd"
     },
     {
-      "id": "10f980",
-      "title": "Study yks",
-      "text": "you have no time"
-    },
-    {
       "id": "ee36de",
       "title": "play elden ring",
       "text": "praise the elden lord"
+    },
+    {
+      "id": "e191fd",
+      "title": "do your job",
+      "text": "write to do app code 1111"
     }
   ]
 }
