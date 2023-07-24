@@ -2,7 +2,7 @@
   "tasks": [
     {
       "id": "ca0bf6",
-      "title": "play fm",
+      "title": "Make your plan",
       "text": "sadasdasd"
     },
     {
@@ -14,6 +14,11 @@
       "id": "e191fd",
       "title": "do your job",
       "text": "write to do app code 1111"
+    },
+    {
+      "id": "87d35b",
+      "title": "Study Next.js",
+      "text": ""
     }
   ]
 }
