@@ -1,14 +1,21 @@
-import { getAllToDos } from "./api"
-import ToDoList from "./components/ToDoList"
-import AddToDo from "./components/AddToDo";
+'use client'
+
+import ToDoList from "../../components/ToDoList"
+import AddToDo from "../../components/AddToDo";
+import React, { useState, useEffect } from "react";
 
 
-export default async function Home() {
-  var tasks = await getAllToDos();
+export default function Home() {
+  const [toDos, setToDos] = useState([]);
+
+  useEffect(() => {
+    let arr;
+    arr = JSON.parse(localStorage.getItem("toDos") || "");
+    setToDos(arr);
+    localStorage.setItem('toDos', JSON.stringify(toDos));
+  }, [])
+
   
-
-  
-
   return (
     <main className="flex justify-content-center">
 
@@ -17,9 +24,9 @@ export default async function Home() {
           <h1>To-Do App List</h1>
         </div>
         <br></br>
-        <AddToDo tasks={tasks}></AddToDo>
+        <AddToDo toDos = {toDos}></AddToDo>
         <br></br>
-        <ToDoList tasks={tasks}></ToDoList>
+        <ToDoList toDos = {toDos}></ToDoList>
       </div>
     </main>
 
