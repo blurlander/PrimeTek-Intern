@@ -42,9 +42,19 @@ const ToDoList = (props) => {
 
     // Get data from local storage in first render
     useEffect(() => {
+
       let arr;
-      arr = JSON.parse(localStorage.getItem("toDos") || "");
-      setToDos(arr); //Get data from localStorage to "toDos"
+        //Get data from localStorage to "toDos"
+        
+      try{
+        arr = JSON.parse(localStorage.getItem("toDos") || "");
+        setToDos(arr); 
+      }catch (error){
+        console.log(error.message);
+      }
+      localStorage.setItem('toDos', JSON.stringify(toDos));
+      
+      
     }, [])
   
     // Button content for toolbar
@@ -73,9 +83,11 @@ const ToDoList = (props) => {
         setValue("");
         setVisible(false);
 
-
-        // Update localStorage
-        window.localStorage.setItem('toDos', JSON.stringify(toDos));
+        //Update localStorage
+        if (typeof window !== "undefined") {
+            // Client-side-only code
+            window.localStorage.setItem('toDos', JSON.stringify(toDos));
+          }
     };
 
 
