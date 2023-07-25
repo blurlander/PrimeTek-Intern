@@ -13,7 +13,7 @@ export default function Home() {
 
       <div className="col-8 relative">
         <div className="flex justify-content-center">
-          <h1>To-Do App List</h1>
+          <h1>To-Do App</h1>
         </div>
         <br></br>
         <ToDoList></ToDoList>

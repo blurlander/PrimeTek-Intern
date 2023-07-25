@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { DataView } from 'primereact/dataview';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -22,84 +21,115 @@ const ToDoList = (props) => {
 
     const toast = useRef(null);
 
-    const [editVisible, setEditVisible] = useState(false);
+    // Boolean flag for Dialogs
+    const [editVisible, setEditVisible] = useState(false); 
     const [delVisible, setDelVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
+
+    // Variables for storing edit data for editing and deleting
     const [editValue, setEditValue] = useState('');
     const [editTitle, setEditTitle] = useState('');
     const [editId, setEditId] = useState('');
-    const [visible, setVisible] = useState(false);
+    
+    //Variables for creating new "to do"
     const [value, setValue] = useState('');
     const [newTitle, setTitle] = useState('');
+    
+    //To do list
     const [toDos, setToDos] = useState([]);
 
+
+
+    // Get data from local storage in first render
     useEffect(() => {
       let arr;
       arr = JSON.parse(localStorage.getItem("toDos") || "");
-      setToDos(arr);
+      setToDos(arr); //Get data from localStorage to "toDos"
     }, [])
   
-
+    // Button content for toolbar
     const content = (
         <React.Fragment>
             <Button label="Add New Task" icon="pi pi-plus" className="mr-2" onClick={() => setVisible(true)} />
         </React.Fragment>
     );
 
+
+    // Function that add new "to do" to local storage 
     const addNewToDo = (e) => {
         e.preventDefault();
 
-        let id = uuid();
+        let id = uuid(); //Creating uniqe id for each "to do"
         const toDo = {
-            id: id.slice(0, 6).toString(),
+            id: id.slice(0, 6).toString(), // just use first 6 digit of id
             title: newTitle,
             text: value
         };
-        toDos.push(toDo);
+
+        toDos.push(toDo); // Push new "to do"
+        
+        //Set variables to default
         setTitle("");
         setValue("");
         setVisible(false);
-        setToDos(toDos);
-        console.log(toDos);
+
+
+        // Update localStorage
         window.localStorage.setItem('toDos', JSON.stringify(toDos));
-
-    }
-
+    };
 
 
 
 
+    // Function that allow us to edit an existing "to do"
     const editToDo = (e) => {
         e.preventDefault();
+
+        // Find selected "to do"
         var indexOfObject = toDos.findIndex(toDo => {
             return toDo.id === editId;
         });
-        
+
+
+        // Update selected "to do" with inputs
         toDos[indexOfObject].title = editTitle;
         toDos[indexOfObject].text = editValue;
-        console.log(toDos[indexOfObject]);
+
+        //Set variables to default
         setEditId("");
         setEditTitle("");
         setEditTitle("");
         setEditVisible(false);
-        window.localStorage.setItem('toDos', JSON.stringify(toDos));
-    }
 
+        //Update localStorage
+        window.localStorage.setItem('toDos', JSON.stringify(toDos));
+    };
+
+    // Function for deleting "to do"
     const removeToDo = (e) => {
         e.preventDefault();
+
+        // Find selected "to do"
         const indexOfObject = toDos.findIndex(toDo => {
             return toDo.id === editId;
         });
+
+        //Remove selected "to do"
         toDos.splice(indexOfObject, 1);
+
+        //Set variables to default
         setEditId("");
         setDelVisible(false);
+
+        //Update localStorage
         window.localStorage.setItem('toDos', JSON.stringify(toDos));
-    }
+    };
 
 
 
 
 
-
+    // Item template of "to do" for displaying
     const itemTemplate = (task) => {
         return (
             <div className='col-12'>
@@ -133,6 +163,7 @@ const ToDoList = (props) => {
 
 
     return (
+        
         <div>
             <div className="card">
                 <Toolbar
