@@ -42,7 +42,6 @@ const ToDoList = (props) => {
 
     // Get data from local storage in first render
     useEffect(() => {
-
       let arr;
         //Get data from localStorage to "toDos"
         
@@ -53,8 +52,6 @@ const ToDoList = (props) => {
         console.log(error.message);
       }
       localStorage.setItem('toDos', JSON.stringify(toDos));
-      
-      
     }, [])
   
     // Button content for toolbar
@@ -63,6 +60,17 @@ const ToDoList = (props) => {
             <Button label="Add New Task" icon="pi pi-plus" className="mr-2" onClick={() => setVisible(true)} />
         </React.Fragment>
     );
+
+    // Show toast
+    const toastAdded = () => {
+        toast.current.show({severity:'success', summary: 'Success', detail:'New task is added', life: 3000});
+    }
+    const toastEdited = () => {
+        toast.current.show({severity:'success', summary: 'Success', detail:'Task is updated', life: 3000});
+    }
+    const toastDeleted = () => {
+        toast.current.show({severity:'info', summary: 'Deleted', detail:'Task is deleted', life: 3000});
+    }
 
 
     // Function that add new "to do" to local storage 
@@ -185,6 +193,7 @@ const ToDoList = (props) => {
     return (
         
         <div>
+             <Toast ref={toast} />
             <div className="card">
                 <Toolbar
                     pt={{
@@ -202,7 +211,7 @@ const ToDoList = (props) => {
                         </div>
                         <br></br>
                         <InputTextarea autoResize value={value} onChange={(e) => setValue(e.target.value)} rows={10} cols={91} />
-                        <Button type="submit" label="Submit" icon="pi pi-check" />
+                        <Button type="submit" label="Submit" icon="pi pi-check" onClick={toastAdded}/>
                     </form>
                 </Dialog>
             </div>
@@ -223,7 +232,7 @@ const ToDoList = (props) => {
                         </div>
                         <br></br>
                         <InputTextarea autoResize placeholder={editValue} value={editValue} onChange={(e) => setEditValue(e.target.value)} rows={10} cols={91} />
-                        <Button type="submit" label="Submit" icon="pi pi-check" />
+                        <Button type="submit" label="Submit" icon="pi pi-check" onClick={toastEdited} />
                     </form>
                 </Dialog>
 
@@ -232,7 +241,7 @@ const ToDoList = (props) => {
                         <h3>Do you want to delete this task?</h3>
                         <br></br>
                         <div className="flex justify-content-between">
-                            <Button type="submit" label="Yes" icon="pi pi-check" />
+                            <Button type="submit" label="Yes" icon="pi pi-check" onClick={toastDeleted}/>
                             <Button type="button" onClick={() => setDelVisible(false)} severity="danger" label="No" icon="pi pi-times" />
                         </div>
 
