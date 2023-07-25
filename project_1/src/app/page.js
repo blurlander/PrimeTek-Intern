@@ -1,4 +1,4 @@
-'use client'
+
 
 import ToDoList from "../../components/ToDoList"
 import React from "react";
