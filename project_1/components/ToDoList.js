@@ -43,15 +43,20 @@ const ToDoList = (props) => {
     // Get data from local storage in first render
     useEffect(() => {
       let arr;
+
         //Get data from localStorage to "toDos"
-        
       try{
         arr = JSON.parse(localStorage.getItem("toDos") || "");
-        setToDos(arr); 
+        
+
       }catch (error){
         console.log(error.message);
-      }
-      localStorage.setItem('toDos', JSON.stringify(toDos));
+
+      };
+      setToDos(arr); 
+      localStorage.setItem('toDos', JSON.stringify(arr));
+      
+      
     }, [])
   
     // Button content for toolbar
@@ -179,7 +184,6 @@ const ToDoList = (props) => {
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     };
@@ -201,7 +205,7 @@ const ToDoList = (props) => {
                     }}
                     center={content}
                 ></Toolbar>
-                <Dialog header="Add New Task" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+                <Dialog header="Add New Task" visible={visible} style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }} onHide={() => setVisible(false)}>
                     <form onSubmit={(e) => addNewToDo(e)} method="POST">
                         <div className="p-inputgroup flex-1">
                             <span className="p-inputgroup-addon">
@@ -210,7 +214,7 @@ const ToDoList = (props) => {
                             <InputText placeholder="Title" value={newTitle} onChange={(e) => setTitle(e.target.value)} />
                         </div>
                         <br></br>
-                        <InputTextarea autoResize value={value} onChange={(e) => setValue(e.target.value)} rows={10} cols={91} />
+                        <InputTextarea autoResize value={value} onChange={(e) => setValue(e.target.value)} rows={10} cols={91}/>
                         <Button type="submit" label="Submit" icon="pi pi-check" onClick={toastAdded}/>
                     </form>
                 </Dialog>
@@ -222,7 +226,7 @@ const ToDoList = (props) => {
             <div className="flex justify-content-center align-items-start">
                 <DataView value={toDos} itemTemplate={itemTemplate} />
 
-                <Dialog header="Edit Task" visible={editVisible} style={{ width: '50vw' }} onHide={() => setEditVisible(false)}>
+                <Dialog header="Edit Task" visible={editVisible} style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }} onHide={() => setEditVisible(false)}>
                     <form onSubmit={(e) => editToDo(e)} method="POST">
                         <div className="p-inputgroup flex-1">
                             <span className="p-inputgroup-addon">
@@ -236,7 +240,7 @@ const ToDoList = (props) => {
                     </form>
                 </Dialog>
 
-                <Dialog header="Remove Task" visible={delVisible} style={{ width: '25vw' }} onHide={() => setDelVisible(false)}>
+                <Dialog header="Remove Task" visible={delVisible} style={{ width: '25vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }} onHide={() => setDelVisible(false)}>
                     <form onSubmit={(e) => removeToDo(e)} method="POST">
                         <h3>Do you want to delete this task?</h3>
                         <br></br>
