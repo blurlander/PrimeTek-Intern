@@ -102,7 +102,11 @@ const ToDoList = (props) => {
         setEditVisible(false);
 
         //Update localStorage
-        window.localStorage.setItem('toDos', JSON.stringify(toDos));
+        if (typeof window !== "undefined") {
+            // Client-side-only code
+            window.localStorage.setItem('toDos', JSON.stringify(toDos));
+          }
+        
     };
 
     // Function for deleting "to do"
@@ -122,7 +126,11 @@ const ToDoList = (props) => {
         setDelVisible(false);
 
         //Update localStorage
-        window.localStorage.setItem('toDos', JSON.stringify(toDos));
+        if (typeof window !== "undefined") {
+            // Client-side-only code
+            window.localStorage.setItem('toDos', JSON.stringify(toDos));
+          }
+        
     };
 
 
