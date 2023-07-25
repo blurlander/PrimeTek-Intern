@@ -16,14 +16,7 @@ export default function AddToDo(props) {
     const [visible, setVisible] = useState(false);
     const [value, setValue] = useState('');
     const [newTitle, setTitle] = useState('');
-    const [toDos, setToDos] = useState([]);
 
-    useEffect(() => {
-        let arr;
-        arr = JSON.parse(localStorage.getItem("toDos") || "");
-        setToDos(arr);
-        console.log("addtodo");
-      }, [])
 
 
     const content = (
@@ -42,13 +35,13 @@ export default function AddToDo(props) {
             text: value
         };
 
-        toDos.push(toDo);
+        props.toDos.push(toDo);
         setTitle("");
         setValue("");
         setVisible(false);  
-        localStorage.setItem('toDos', JSON.stringify(toDos));  
-        setToDos(toDos);
-        console.log(toDos);
+        localStorage.setItem('toDos', JSON.stringify(props.toDos));  
+        props.setToDos(props.toDos);
+        console.log(props.toDos);
 
     }
 

@@ -1,19 +1,11 @@
 'use client'
 
 import ToDoList from "../../components/ToDoList"
-import AddToDo from "../../components/AddToDo";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 
 export default function Home() {
-  const [toDos, setToDos] = useState([]);
 
-  useEffect(() => {
-    let arr;
-    arr = JSON.parse(localStorage.getItem("toDos") || "");
-    setToDos(arr);
-    localStorage.setItem('toDos', JSON.stringify(toDos));
-  }, [])
 
   
   return (
@@ -24,9 +16,7 @@ export default function Home() {
           <h1>To-Do App List</h1>
         </div>
         <br></br>
-        <AddToDo toDos = {toDos}></AddToDo>
-        <br></br>
-        <ToDoList toDos = {toDos}></ToDoList>
+        <ToDoList></ToDoList>
       </div>
     </main>
 
