@@ -2,6 +2,7 @@
 
 import ToDoList from "../../components/ToDoList"
 import React from "react";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
         <br></br>
         <ToDoList></ToDoList>
       </div>
+      <br></br>
+      <Link href="/test"> Go to another page</Link>
     </main>
 
   )
