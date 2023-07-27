@@ -175,7 +175,7 @@ const ToDoList = (props) => {
                             {task.text}
                         </div>
                     </div>
-                    <div className="relative w-9rem h-9rem mx-3 my-3 md:my-0 border-round">
+                    <div className="relative w-12rem h-9rem mx-3 my-3 md:my-0 border-round">
                         <div className="absolute right-50 flex align-items-center justify-content-center w-4rem h-4rem">
                             <Button icon="pi pi-pencil" onClick={() => { setEditVisible(true), setEditValue(task.text), setEditTitle(task.title), setEditId(task.id) }} rounded severity="secondary" aria-label="Edit" />
                         </div>
@@ -223,7 +223,7 @@ const ToDoList = (props) => {
             <br></br>
 
 
-            <div className="flex justify-content-center align-items-start">
+            <div className="flex-auto justify-content-center"> 
                 <DataView value={toDos} itemTemplate={itemTemplate} />
 
                 <Dialog header="Edit Task" visible={editVisible} style={{ width: '50vw' }} breakpoints={{ '960px': '75vw', '641px': '100vw' }} onHide={() => setEditVisible(false)}>
