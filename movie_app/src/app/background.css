@@ -1,3 +1,10 @@
 .navi {
     background-image: url('../../images/background.jpg');
 }
+
+.brand {
+
+    background: -webkit-linear-gradient(#4880EC, #019CAD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
