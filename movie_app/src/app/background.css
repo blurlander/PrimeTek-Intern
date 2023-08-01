@@ -1,5 +1,6 @@
 .navi {
     background-image: url('../../images/background.jpg');
+    z-index: 999 !important;
 }
 
 .brand {

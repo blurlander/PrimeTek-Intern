@@ -46,7 +46,7 @@ export default function Home() {
 
   return (
     <main className="z-1 flex justify-content-center gap-3">
-      <div className="flex w-screen fixed top-0 h-5rem navi" style={{ zIndex: "999 !important" }}>
+      <div className="flex w-screen fixed top-0 h-5rem navi" >
         <div className='ml-6'>
           <h1 className='brand'>MoviePrime</h1>
         </div>
@@ -64,7 +64,7 @@ export default function Home() {
         </div>
       </div>
       <br></br>
-      <div className='w-screen grid flex justify-content-center mt-8 ' style={{ zIndex: "1 !important" }}>
+      <div className='w-screen grid flex justify-content-center mt-8 z-1'>
         {movies.map(function (movie) {
           if (movie.title.toLowerCase().includes(filter.toLowerCase())){
             return (
@@ -83,7 +83,7 @@ export default function Home() {
                     <span >
                       <Button label="Details" 
                       onClick={() => router.push('/movieDetails/'.concat(movie.id))}
-                       severity="info" rounded  style={{ zIndex: "1 !important" }} />
+                       severity="info" rounded className='z-1'/>
                     </span>
                   </div>
                 </div>
