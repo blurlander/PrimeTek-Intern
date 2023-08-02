@@ -39,26 +39,26 @@ export default function movieDetails(props) {
 
 
   return (
-    <main>
-      <div className="flex w-screen fixed top-0 h-5rem" style={{ zIndex: "999 !important" }}>
+    <main className='grid'>
+      <div className="flex w-screen  top-0 h-5rem  sm:col-8 md:col-6 lg:col-6" style={{ zIndex: "999 !important" }}>
         <div className='ml-6'>
-        <h1 className='brand'>MoviePrime</h1>
+          <h1 className='brand'>MoviePrime</h1>
         </div>
         <div className='flex w-full justify-content-center align-items-center gap-3'>
-            <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
+          <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
         </div>
       </div>
       <br></br>
       <div className='w-screen grid flex justify-content-center mt-8'>
-        <div className='col-5 sm:col-9 lg:col-4 xl:col-4 p-2'>
-        <img className="w-8 shadow-2 border-round" src={'https://image.tmdb.org/t/p/w500'.concat(movie.poster_path)} 
-        alt={movie.name} />
-        <div className="w-4 shadow-2 border-round ml-8 mt-3">
-        <Rating value={Math.round(movie.vote_average/2)} tooltip={movie.vote_average} readOnly cancel={false}></Rating>
+        <div className='col-9 sm:col-9 lg:col-4 xl:col-4 p-2'>
+          <img className="w-8 shadow-2 border-round" src={'https://image.tmdb.org/t/p/w500'.concat(movie.poster_path)}
+            alt={movie.name} />
+          <div className="w-4 shadow-2 border-round mt-3">
+            <Rating value={Math.round(movie.vote_average / 2)} tooltip={movie.vote_average} readOnly cancel={false}></Rating>
+          </div>
+
         </div>
-        
-        </div>
-        <div className='col-7 sm:col-8 lg:col-7 xl:col-7 p-2'>
+        <div className='col-10 sm:col-8 lg:col-7 xl:col-7 p-2'>
           <h1>{movie.title}</h1>
           <br></br>
           <h3>Overview</h3>

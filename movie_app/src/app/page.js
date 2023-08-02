@@ -9,10 +9,12 @@ import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { useRouter } from 'next/navigation'
 import axios from '../../node_modules/axios';
-import { AutoComplete } from 'primereact/autocomplete';
+import { AutoComplete } from "primereact/autocomplete";
+import Link from 'next/link'
 
 export default function Home() {
 
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
@@ -21,32 +23,32 @@ export default function Home() {
 
   const getAllMovies = () => {
 
-      const options = {
-        method: 'GET',
-        url: 'https://api.themoviedb.org/3/movie/popular',
-        params: {language: 'en-US', page: 1},
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNWQ1YTRjM2Y2ZGZmNzE1YjlmZGJhODMwOWE0MTZkNSIsInN1YiI6IjY0YzRkYWFkOWI2ZTQ3MDBhZDJhMjBjZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sIBvlru7khkMdfArYG_8oGEZ5eh4T-im7A85KeJcHyw'
-        }
-      };
-      
-      axios
-        .request(options)
-        .then(function (response) {
-          console.log(response.data);
-          setMovies([].concat(movies,response.data.results));
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+    const options = {
+      method: 'GET',
+      url: 'https://api.themoviedb.org/3/movie/popular',
+      params: { language: 'en-US' },
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNWQ1YTRjM2Y2ZGZmNzE1YjlmZGJhODMwOWE0MTZkNSIsInN1YiI6IjY0YzRkYWFkOWI2ZTQ3MDBhZDJhMjBjZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sIBvlru7khkMdfArYG_8oGEZ5eh4T-im7A85KeJcHyw'
+      }
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        setMovies(response.data.results);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   }
 
 
 
 
   useEffect(() => {
-    getAllMovies(); 
+    getAllMovies();
   }, []);
 
   const handleSearch = (e) => {
@@ -54,9 +56,31 @@ export default function Home() {
     setFilter(search);
   }
 
+  const suggestTemplate = (movie) => {
+    return (
+      <div className="flex align-items-center" onClick={() => router.push('/movieDetails/'.concat(movie.id))}>
+        {movie.title}
+      </div>
+    );
+  }
+
+  const suggest = (e) => {
+
+    setTimeout(() => {
+
+      console.log(search);
+
+      let filteredItems = movies.filter(function movieFilter(movie) {
+        return movie.title.toLowerCase().includes(e.query.toLowerCase());
+      });
+      setFilteredMovies(filteredItems);
+
+    }, 400);
+  }
+
   const itemTemplate = (movie) => {
     return (
-      <div className="col-9 sm:col-8 lg:col-4 xl:col-4 p-2" key={movie.id} title={movie.title}>
+      <div className="sm:col-8 lg:col-4 xl:col-4 p-2" key={movie.id} title={movie.title}>
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
@@ -81,17 +105,22 @@ export default function Home() {
 
 
   return (
-    <main className="z-1 flex justify-content-center gap-3">
-      <div className="flex w-screen fixed top-0 h-5rem navi" >
-        <div className='ml-6'>
-          <h1 className='brand'>MoviePrime</h1>
+    <main className="z-1 flex justify-content-center align-items-start gap-3">
+      <div className="flex w-screen fixed top-0 navi grid mb-8" >
+        <div className='col-9 sm:col-8 md:col-9 lg:col-6'>
+          <h1 className='brand w-auto ml-3 sm:h-2rem md:h-3rem lg:h-3rem'>MoviePrime</h1>
         </div>
-        <div className='flex w-full justify-content-center align-items-center gap-3'>
+        <div className='flex justify-content-center align-items-center gap-3 col-12 sm:col-9  md:col-6 lg:col-6'>
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
           <form onSubmit={(e) => handleSearch(e)}>
             <span className="p-input-icon-left">
-              <i className="pi pi-search" />
-              <InputText placeholder="Search" onChange={(e) => setSearch(e.target.value)} className='sm:w-10rem  md:w-20rem lg:w-30rem' />
+              <AutoComplete placeholder="Search" value={search}
+                onChange={(e) => setSearch(e.value)}
+                suggestions={filteredMovies}
+                completeMethod={suggest} itemTemplate={suggestTemplate}
+                field="name" pt={{
+                  input: { root: { className: 'w-8rem sm:w-16rem md:w-18rem lg:w-20rem' } },
+                }} />
             </span>
             <Button label="Search" rounded className='ml-2'
               style={{ backgroundImage: "linear-gradient(to right, #4880EC, #019CAD)" }}
@@ -101,7 +130,7 @@ export default function Home() {
       </div>
       <br></br>
       <div>
-        <div className='w-screen grid flex justify-content-center mt-8 z-1'>
+        <div className='w-screen grid flex justify-content-center align-items-cente z-1' style={{ marginTop: "8rem" }}>
           <DataView layout="grid" value={movies.filter(function movieFilter(movie) {
             return movie.title.toLowerCase().includes(filter.toLowerCase());
           })} itemTemplate={itemTemplate} paginator rows={10} />
