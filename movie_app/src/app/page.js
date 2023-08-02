@@ -17,7 +17,9 @@ export default function Home() {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [filter, setFilter] = useState("");
+
   const router = useRouter();
 
 
@@ -68,8 +70,6 @@ export default function Home() {
 
     setTimeout(() => {
 
-      console.log(search);
-
       let filteredItems = movies.filter(function movieFilter(movie) {
         return movie.title.toLowerCase().includes(e.query.toLowerCase());
       });
@@ -80,7 +80,7 @@ export default function Home() {
 
   const itemTemplate = (movie) => {
     return (
-      <div className="sm:col-8 lg:col-4 xl:col-4 p-2" key={movie.id} title={movie.title}>
+      <div className="col-12 sm:col-8 md:col-4 lg:col-4 xl:col-4 p-2" key={movie.id} title={movie.title}>
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
@@ -104,6 +104,7 @@ export default function Home() {
   }
 
 
+
   return (
     <main className="z-1 flex justify-content-center align-items-start gap-3">
       <div className="flex w-screen fixed top-0 navi grid mb-8" >
@@ -114,8 +115,8 @@ export default function Home() {
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
           <form onSubmit={(e) => handleSearch(e)}>
             <span className="p-input-icon-left">
-              <AutoComplete placeholder="Search" value={search}
-                onChange={(e) => setSearch(e.value)}
+              <AutoComplete placeholder="Search" value={selectedMovie}
+                onChange={(e) => {setSearch(e.value), setSelectedMovie(e.value)}}
                 suggestions={filteredMovies}
                 completeMethod={suggest} itemTemplate={suggestTemplate}
                 field="name" pt={{
@@ -130,7 +131,7 @@ export default function Home() {
       </div>
       <br></br>
       <div>
-        <div className='w-screen grid flex justify-content-center align-items-cente z-1' style={{ marginTop: "8rem" }}>
+        <div className='w-screen z-1' style={{ marginTop: "8rem" }}>
           <DataView layout="grid" value={movies.filter(function movieFilter(movie) {
             return movie.title.toLowerCase().includes(filter.toLowerCase());
           })} itemTemplate={itemTemplate} paginator rows={10} />
