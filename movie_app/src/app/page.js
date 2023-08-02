@@ -3,14 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
-import { InputText } from 'primereact/inputtext';
 import './background.css';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { useRouter } from 'next/navigation'
 import axios from '../../node_modules/axios';
 import { AutoComplete } from "primereact/autocomplete";
-import Link from 'next/link'
 
 export default function Home() {
 

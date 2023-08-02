@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Rating } from 'primereact/rating';
-import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import '../../background.css';
 import { useRouter } from 'next/navigation'
+import axios from '../../../../node_modules/axios';
 
 
 
@@ -17,17 +17,23 @@ export default function movieDetails(props) {
   const getMovie = () => {
     const options = {
       method: 'GET',
+      url: 'https://api.themoviedb.org/3/movie/'.concat(props.params.movieID),
+      params: { language: 'en-US' },
       headers: {
         accept: 'application/json',
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNWQ1YTRjM2Y2ZGZmNzE1YjlmZGJhODMwOWE0MTZkNSIsInN1YiI6IjY0YzRkYWFkOWI2ZTQ3MDBhZDJhMjBjZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sIBvlru7khkMdfArYG_8oGEZ5eh4T-im7A85KeJcHyw'
       }
     };
 
-    let url = 'https://api.themoviedb.org/3/movie/'.concat(props.params.movieID);
-
-    fetch(url, options)
-      .then(response => response.json())
-      .then(response => setMovie(response));
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        setMovie(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   }
 
 
