@@ -14,6 +14,7 @@ export default function movieDetails(props) {
   const [movie, setMovie] = useState(Object);
   const router = useRouter();
 
+// get movie using id
   const getMovie = () => {
     const options = {
       method: 'GET',

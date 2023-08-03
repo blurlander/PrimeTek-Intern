@@ -14,13 +14,13 @@ export default function Home() {
 
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [search, setSearch] = useState("");
+  const [suggestData, setSuggestData] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [filter, setFilter] = useState("");
 
   const router = useRouter();
 
-
+  //get popular movies for home page first render
   const getAllMovies = () => {
 
     const options = {
@@ -36,7 +36,6 @@ export default function Home() {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
         setMovies(response.data.results);
       })
       .catch(function (error) {
@@ -44,18 +43,42 @@ export default function Home() {
       });
   }
 
+  //get movies using search query for auto complate
+  const searchMovies = async (value) =>{
+
+    const options = {
+      method: 'GET',
+      url: 'https://api.themoviedb.org/3/search/movie',
+      params: {query: value, include_adult: 'false', language: 'en-US'},
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNWQ1YTRjM2Y2ZGZmNzE1YjlmZGJhODMwOWE0MTZkNSIsInN1YiI6IjY0YzRkYWFkOWI2ZTQ3MDBhZDJhMjBjZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sIBvlru7khkMdfArYG_8oGEZ5eh4T-im7A85KeJcHyw'
+      }
+    };
+    
+      const response = await axios.request(options);
+      setSuggestData(response.data.results);
+  }
 
 
 
+// get populer movies
   useEffect(() => {
     getAllMovies();
   }, []);
 
+
+
+// search button => when clicked display movies acording to search query
   const handleSearch = (e) => {
     e.preventDefault();
-    setFilter(search);
+    setFilter(selectedMovie);
+
+    setMovies(suggestData);
   }
 
+
+// item template for auto complate
   const suggestTemplate = (movie) => {
     return (
       <div className="flex align-items-center" onClick={() => router.push('/movieDetails/'.concat(movie.id))}>
@@ -64,18 +87,20 @@ export default function Home() {
     );
   }
 
+
+// auto complate function
   const suggest = (e) => {
+    searchMovies(e.query);
 
     setTimeout(() => {
-
-      let filteredItems = movies.filter(function movieFilter(movie) {
+      let filteredItems = suggestData.filter(function movieFilter(movie) {
         return movie.title.toLowerCase().includes(e.query.toLowerCase());
       });
       setFilteredMovies(filteredItems);
-
-    }, 400);
+    }, 500);
   }
 
+  //item template for displaying movies
   const itemTemplate = (movie) => {
     return (
       <div className="col-12 sm:col-8 md:col-4 lg:col-4 xl:col-4 p-2" key={movie.id} title={movie.title}>
@@ -113,9 +138,10 @@ export default function Home() {
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
           <form onSubmit={(e) => handleSearch(e)}>
             <span className="p-input-icon-left">
-              <AutoComplete placeholder="Search" value={selectedMovie}
-                onChange={(e) => {setSearch(e.value), setSelectedMovie(e.value)}}
+              <AutoComplete placeholder="Search" 
+                onChange={(e) => {setSelectedMovie(e.value), console.log(selectedMovie)}}
                 suggestions={filteredMovies}
+                value={selectedMovie}
                 completeMethod={suggest} itemTemplate={suggestTemplate}
                 field="name" pt={{
                   input: { root: { className: 'w-8rem sm:w-16rem md:w-18rem lg:w-20rem' } },
