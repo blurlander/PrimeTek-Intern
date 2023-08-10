@@ -17,6 +17,7 @@ export default function Home() {
   const [theme, setTheme] = useState('dark');
 
 
+  // fecth city 
   const getCity = async () => {
     console.log(search);
     const options = {
@@ -45,7 +46,7 @@ export default function Home() {
   }
 
 
-  // auto complate function
+  // fetch city names for autocomplate
   const suggest = async (e) => {
 
     const options = {
@@ -68,18 +69,12 @@ export default function Home() {
   }
 
 
-
+// change theme function
   const changeTheme = (e) => {
     setChecked(e.value);
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     PrimeReact.changeTheme(`lara-${theme}-blue`, `lara-${newTheme}-blue`, 'theme-link', () =>
     setTheme(newTheme));  
-
-    if(e.value) {
-      setTheme('dark');
-    }else {
-      setTheme('light');
-    }
   }
 
 
@@ -91,12 +86,13 @@ export default function Home() {
   }, [])
 
 
+  // wait for fetching
   if (isLoading) return <p>Loading...</p>
 
 
   return (
     <main className="flex grid justify-content-center align-items-start gap-3 relative">
-      <div className="card flex justiify-content-center top-0 right-0 mt-5 mr-5 absolute">
+      <div className="col-12 card flex justify-content-end align-items-center ">
         <InputSwitch checked={checked} onChange={(e) => changeTheme(e)} />
       </div>
 
@@ -126,11 +122,11 @@ export default function Home() {
         </form>
       </div>
 
-      <Card title={city.location.name} subTitle={city.location.country} className='col-4 mt-4'>
+      <Card title={city.location.name} subTitle={city.location.country} className='sm:col-4 md:col-6 mt-4'>
         <div className='flex justify-content-between align-items-center'>
 
-          <img className='w-6rem ml-3' src={city.current.condition.icon}></img>
-          <span className='text-4xl mr-8'>
+          <img className='max-w-6rem' src={city.current.condition.icon}></img>
+          <span className='text-4xl'>
             {city.current.temp_c} ℃
           </span>
 
