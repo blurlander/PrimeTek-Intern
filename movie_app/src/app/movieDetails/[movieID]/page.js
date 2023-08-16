@@ -6,12 +6,17 @@ import { Button } from 'primereact/button';
 import '../../background.css';
 import { useRouter } from 'next/navigation'
 import axios from '../../../../node_modules/axios';
+import { UserAuth } from "../../AuthContext";
 
 
 
 
 export default function movieDetails(props) {
   const [movie, setMovie] = useState(Object);
+  const { user, googleSignIn, logOut } = UserAuth();
+  const [userLoading, setUserLoading] = useState(true);
+  const [checked, setChecked] = useState(true);
+  const [theme, setTheme] = useState('vela');
   const router = useRouter();
 
 // get movie using id
@@ -44,6 +49,14 @@ export default function movieDetails(props) {
     console.log(movie);
   }, []);
 
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      setUserLoading(false);
+    };
+    checkAuthentication();
+  }, [user]);
+
 
   return (
     <main className='grid'>
@@ -54,6 +67,13 @@ export default function movieDetails(props) {
         <div className='flex w-full justify-content-center align-items-center gap-3'>
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
         </div>
+        {userLoading ? null : !user ? (
+            <div></div>
+            ) : (
+              <div className='card'>
+                <h4 className='text-primary'>Welcome, {user.displayName}</h4>
+              </div>
+            )}
       </div>
       <br></br>
       <div className='w-screen grid flex justify-content-center mt-8'>

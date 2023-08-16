@@ -9,14 +9,66 @@ import { DataView } from 'primereact/dataview';
 import { useRouter } from 'next/navigation'
 import axios from '../../node_modules/axios';
 import { AutoComplete } from "primereact/autocomplete";
+import PrimeReact from 'primereact/api';
+import { InputSwitch } from 'primereact/inputswitch';
+import { UserAuth } from "./AuthContext";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+
 
 export default function Home() {
 
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [movies, setMovies] = useState([]);
   const [suggestData, setSuggestData] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedMovie, setSelectedMovie] = useState("");
   const [filter, setFilter] = useState("");
+  const [isLoading, setLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
+  const [checked, setChecked] = useState(true);
+  const [theme, setTheme] = useState('vela');
+  const { user, googleSignIn, logOut } = UserAuth();
+
+
+
+  const handleSignIn = async () => {
+    try {
+      await googleSignIn();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkUser = (movie) => {
+    console.log(user);
+
+    if (user != null){
+      router.push('/movieDetails/'.concat(movie.id));
+    }else {
+      dialog();
+    }
+    
+  }
+
+
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      setUserLoading(false);
+    };
+    checkAuthentication();
+  }, [user]);
+
+
+
 
   const router = useRouter();
 
@@ -37,6 +89,8 @@ export default function Home() {
       .request(options)
       .then(function (response) {
         setMovies(response.data.results);
+        setLoading(false);
+
       })
       .catch(function (error) {
         console.error(error);
@@ -44,32 +98,43 @@ export default function Home() {
   }
 
   //get movies using search query for auto complate
-  const searchMovies = async (value) =>{
+  const searchMovies = async (value) => {
 
     const options = {
       method: 'GET',
       url: 'https://api.themoviedb.org/3/search/movie',
-      params: {query: value, include_adult: 'false', language: 'en-US'},
+      params: { query: value, include_adult: 'false', language: 'en-US' },
       headers: {
         accept: 'application/json',
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNWQ1YTRjM2Y2ZGZmNzE1YjlmZGJhODMwOWE0MTZkNSIsInN1YiI6IjY0YzRkYWFkOWI2ZTQ3MDBhZDJhMjBjZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sIBvlru7khkMdfArYG_8oGEZ5eh4T-im7A85KeJcHyw'
       }
     };
-    
-      const response = await axios.request(options);
-      setSuggestData(response.data.results);
+
+
+    const response = await axios.request(options);
+    setSuggestData(response.data.results);
+
   }
 
 
 
-// get populer movies
+  // get populer movies
   useEffect(() => {
     getAllMovies();
   }, []);
 
 
+  // change theme function
+  const changeTheme = (e) => {
+    setChecked(e.value);
+    const newTheme = theme === 'vela' ? 'saga' : 'vela';
+    PrimeReact.changeTheme(`${theme}-blue`, `${newTheme}-blue`, 'theme-link', () =>
+      setTheme(newTheme));
+  }
 
-// search button => when clicked display movies acording to search query
+
+
+  // search button => when clicked display movies acording to search query
   const handleSearch = (e) => {
     e.preventDefault();
     setFilter(selectedMovie);
@@ -77,8 +142,7 @@ export default function Home() {
     setMovies(suggestData);
   }
 
-
-// item template for auto complate
+  // item template for auto complate
   const suggestTemplate = (movie) => {
     return (
       <div className="flex align-items-center" onClick={() => router.push('/movieDetails/'.concat(movie.id))}>
@@ -88,7 +152,7 @@ export default function Home() {
   }
 
 
-// auto complate function
+  // auto complate function
   const suggest = (e) => {
     searchMovies(e.query);
 
@@ -117,7 +181,7 @@ export default function Home() {
             <Rating value={Math.round(movie.vote_average / 2)} tooltip={movie.vote_average} readOnly cancel={false}></Rating>
             <span >
               <Button label="Details"
-                onClick={() => router.push('/movieDetails/'.concat(movie.id))}
+                onClick={() => checkUser(movie)}
                 severity="info" rounded className='z-1' />
             </span>
           </div>
@@ -126,20 +190,45 @@ export default function Home() {
     )
   }
 
+  const accept = () => {
+    handleSignIn();
+}
 
+const reject = () => {
+    
+}
+
+
+  const dialog = () => {
+    confirmDialog({
+        message: 'You need to be logged in to go to the details page.',
+        header: 'Contuniue',
+        icon: 'pi pi-exclamation-triangle',
+        accept,
+        reject
+    });
+};
+
+
+  // wait for fetching
+  if (isLoading) return <p>Loading...</p>
 
   return (
     <main className="z-1 flex justify-content-center align-items-start gap-3">
-      <div className="flex w-screen fixed top-0 navi grid mb-8" >
-        <div className='col-9 sm:col-8 md:col-9 lg:col-6'>
+      <ConfirmDialog />
+      <div className="flex grid w-screen fixed top-0 navi grid mb-8" >
+        <div className='col-12 sm:col-4 md:col-2 lg:col-2'>
           <h1 className='brand w-auto ml-3 sm:h-2rem md:h-3rem lg:h-3rem'>MoviePrime</h1>
         </div>
         <div className='flex justify-content-center align-items-center gap-3 col-12 sm:col-9  md:col-6 lg:col-6'>
+          <div className="card flex justify-content-end align-items-center ">
+            <InputSwitch checked={checked} onChange={(e) => changeTheme(e)} />
+          </div>
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
           <form onSubmit={(e) => handleSearch(e)}>
             <span className="p-input-icon-left">
-              <AutoComplete placeholder="Search" 
-                onChange={(e) => {setSelectedMovie(e.value), console.log(selectedMovie)}}
+              <AutoComplete placeholder="Search"
+                onChange={(e) => { setSelectedMovie(e.value), console.log(selectedMovie) }}
                 suggestions={filteredMovies}
                 value={selectedMovie}
                 completeMethod={suggest} itemTemplate={suggestTemplate}
@@ -151,7 +240,19 @@ export default function Home() {
               style={{ backgroundImage: "linear-gradient(to right, #4880EC, #019CAD)" }}
               type="submit" />
           </form>
-        </div>
+          </div>
+          <div className='ml-auto mr-5 col-2 flex justify-content-center align-items-center'>
+          {userLoading ? null : !user ? (
+            <Button label="Login" severity="primary" rounded onClick={handleSignIn}/>
+            ) : (
+              <div className='card'>
+                <h4 className='text-primary'>Welcome, {user.displayName}</h4>
+                <Button label="Sign out" severity="secondary" rounded onClick={handleSignOut}/>
+              </div>
+            )}
+          </div>
+
+
       </div>
       <br></br>
       <div>

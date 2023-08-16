@@ -12,7 +12,7 @@ export default function Home() {
   const [search, setSearch] = useState('Ankara');
   const [city, setCity] = useState(Object);
   const [filteredCities, setFilteredCities] = useState([]);
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true);
   const [checked, setChecked] = useState(true);
   const [theme, setTheme] = useState('dark');
 

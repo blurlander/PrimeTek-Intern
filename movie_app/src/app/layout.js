@@ -1,12 +1,12 @@
-import { Inter } from 'next/font/google'
+"use client";
+
 import '/node_modules/primereact/resources/primereact.min.css';
 import '/node_modules/primeflex/primeflex.css';
-import '/node_modules/primereact/resources/themes/vela-blue/theme.css';
+//import '/node_modules/primereact/resources/themes/vela-blue/theme.css';
 import 'primeicons/primeicons.css';
+import { AuthContextProvider } from './AuthContext';
 
 
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Movie App',
@@ -16,7 +16,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <link id="theme-link" rel="stylesheet" href="/themes/vela-blue/theme.css" />
+      </head>
+      <body>
+        <AuthContextProvider>
+        {children}
+        </AuthContextProvider>
+      </body>
     </html>
   )
 }
