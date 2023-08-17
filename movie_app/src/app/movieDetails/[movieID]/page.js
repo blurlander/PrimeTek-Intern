@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Rating } from 'primereact/rating';
 import { Button } from 'primereact/button';
 import '../../background.css';
 import { useRouter } from 'next/navigation'
 import axios from '../../../../node_modules/axios';
 import { UserAuth } from "../../AuthContext";
+import { Menu } from 'primereact/menu';
+import { Avatar } from 'primereact/avatar';
 
 
 
@@ -18,6 +20,10 @@ export default function movieDetails(props) {
   const [checked, setChecked] = useState(true);
   const [theme, setTheme] = useState('vela');
   const router = useRouter();
+
+  const menu = useRef(null);
+
+  
 
 // get movie using id
   const getMovie = () => {
@@ -57,6 +63,42 @@ export default function movieDetails(props) {
     checkAuthentication();
   }, [user]);
 
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+      router.push('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  let items = [
+    { separator: true },
+    {
+      template: () => {
+        return (
+          <div className='flex justify-content-center align-items-center'>
+            <Avatar icon="pi pi-user" className="mr-2" shape="circle" />
+            <div className="flex flex-column align">
+              <span className="font-bold">{user.displayName}</span>
+              <span className="text-sm"></span>
+            </div>
+          </div>
+        )
+      }
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => {
+        handleSignOut();
+      }
+    },
+  ];
+
+
 
   return (
     <main className='grid'>
@@ -68,10 +110,11 @@ export default function movieDetails(props) {
           <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
         </div>
         {userLoading ? null : !user ? (
-            <div></div>
+              <div></div>
             ) : (
-              <div className='card'>
-                <h4 className='text-primary'>Welcome, {user.displayName}</h4>
+              <div className='card flex justify-content-center align-items-center'>
+                <Menu model={items} popup ref={menu} id="popup_menu_left" />
+                <Button icon="pi pi-align-right" className="mr-2" onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
               </div>
             )}
       </div>
@@ -80,7 +123,7 @@ export default function movieDetails(props) {
         <div className='col-9 sm:col-9 lg:col-4 xl:col-4 p-2'>
           <img className="w-8 shadow-2 border-round" src={'https://image.tmdb.org/t/p/w500'.concat(movie.poster_path)}
             alt={movie.name} />
-          <div className="w-4 shadow-2 border-round mt-3">
+          <div className="w-4 border-round mt-3">
             <Rating value={Math.round(movie.vote_average / 2)} tooltip={movie.vote_average} readOnly cancel={false}></Rating>
           </div>
 
