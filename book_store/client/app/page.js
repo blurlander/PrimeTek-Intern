@@ -1,19 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Rating } from 'primereact/rating';
-import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { useRouter } from 'next/navigation'
-import { AutoComplete } from "primereact/autocomplete";
-import PrimeReact from 'primereact/api';
-import { InputSwitch } from 'primereact/inputswitch';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Menu } from 'primereact/menu';
 import { Avatar } from 'primereact/avatar';
 import axios from '../node_modules/axios';
 import { Toast } from 'primereact/toast';
+import { Badge } from 'primereact/badge';
 
 
 
@@ -25,22 +20,23 @@ export default function Home() {
   const toast = useRef(null);
 
   const showInfo = () => {
-    toast.current.show({severity:'info', summary: 'Info', detail:'You must be logged in in order to buy', life: 3000});
-}
+    toast.current.show({ severity: 'info', summary: 'Info', detail: 'You must be logged in in order to buy', life: 3000 });
+  }
 
 
   const [data, setData] = useState([]);
+  const [cartArr, setCartArr] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading1, setLoading1] = useState(true);
   const [isLoading2, setLoading2] = useState(true);
-  const [filter, setFilter] = useState("");
+
 
 
 
   const checkUser = () => {
-    if(!user){
+    if (!user) {
       showInfo();
-    }else {
+    } else {
 
     }
   }
@@ -51,15 +47,15 @@ export default function Home() {
     try {
       await fetch('http://localhost:8000/api/logout', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
       });
-  
+
       window.location.reload(); // Reload the current page
     } catch (error) {
       console.error('Error during logout:', error);
     }
-}
+  }
 
 
 
@@ -91,41 +87,41 @@ export default function Home() {
 
     fetchData();
     fetchUser();
-    
+
 
   }, [])
 
   // Log the state in a separate useEffect to capture the updated values
-useEffect(() => {
-  console.log(data);
-  console.log(user);
-}, [data, user]);
+  useEffect(() => {
+    console.log(data);
+    console.log(user);
+  }, [data, user]);
 
 
-let items = [
-  
-  {
-    template: () => {
-      return (
-        <div className='flex justify-content-center align-items-center'>
-          <Avatar icon="pi pi-user" className="mr-2" shape="circle" />
-          <div className="flex flex-column align">
-            <span className="font-bold">{user.name}</span>
-            <span className="text-sm"></span>
+  let items = [
+
+    {
+      template: () => {
+        return (
+          <div className='flex justify-content-center align-items-center'>
+            <Avatar icon="pi pi-user" className="mr-2" shape="circle" />
+            <div className="flex flex-column align">
+              <span className="font-bold">{user.name}</span>
+              <span className="text-sm"></span>
+            </div>
           </div>
-        </div>
-      )
-    }
-  },
-  { separator: true },
-  {
-    label: 'Logout',
-    icon: 'pi pi-sign-out',
-    command: () => {
-      logout();
-    }
-  },
-];
+        )
+      }
+    },
+    { separator: true },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => {
+        logout();
+      }
+    },
+  ];
 
 
   const itemTemplate = (book) => {
@@ -148,7 +144,7 @@ let items = [
 
 
   // wait for fetching
-  if (isLoading1||isLoading2) return <p>Loading...</p>
+  if (isLoading1 || isLoading2) return <p>Loading...</p>
 
   return (
     <main className="z-1 flex grid  justify-content-center align-items-center gap-3 surface-300">
@@ -157,28 +153,31 @@ let items = [
         <div className='col-4 md:col-2 lg:col-2'>
           <h1 className='brand w-auto ml-3 sm:h-1rem md:h-2rem lg:h-2rem'>PrimE-Books</h1>
         </div>
-        
-          <div className='col-1'>
-            <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
-          </div>
-          <div className='col-4'></div>
-          <div className='col-2 flex justify-content-center align-items-center'>
-            {!user ? (
-              <Button icon='pi pi-sign-in' label='Login' severity="primary" rounded onClick={() => router.push('/login')} />
-            ) : (
-              <div className='card flex justify-content-center align-items-center'>
-                <Menu model={items} popup ref={menu} id="popup_menu_left" />
-                <Button icon="pi pi-align-right" className="mr-2" onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
-              </div>
-            )}
-          </div>
+
+        <div className='col-1'>
+          <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
+        </div>
+        <div className='col-4'></div>
+        <div className='col-2 flex justify-content-center align-items-center'>
+          {!user ? (
+            <Button icon='pi pi-sign-in' label='Login' severity="primary" rounded onClick={() => router.push('/login')} />
+          ) : (
+            <div className='card flex justify-content-center align-items-center'>
+              <Menu model={items} popup ref={menu} id="popup_menu_left" />
+              <Button icon="pi pi-align-right" className="mr-2" onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
+              
+              <i className="pi pi-shopping-cart p-overlay-badge ml-2" style={{ fontSize: '2rem' }}>
+                <Badge value={cartArr.length}></Badge>
+              </i>
+            </div>
+
+          )}
+        </div>
       </div>
       <br></br>
       <div className='col-8'>
         <h1 className='font-bold'>All Books</h1>
-        <DataView layout="grid" value={data.filter(function bookFilter(book) {
-            return book.title.toLowerCase().includes(filter.toLowerCase());
-          })} itemTemplate={itemTemplate} paginator rows={9} />
+        <DataView layout="grid" value={data} itemTemplate={itemTemplate} paginator rows={9} />
       </div>
     </main>
   )
