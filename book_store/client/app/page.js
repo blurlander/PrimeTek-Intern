@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
+import { DataScroller } from 'primereact/datascroller';
 import { useRouter } from 'next/navigation'
 import { Menu } from 'primereact/menu';
 import { Avatar } from 'primereact/avatar';
@@ -34,12 +35,17 @@ export default function Home() {
 
 
 
-  const checkUser = () => {
+  const addToCart = (book) => {
     if (!user) {
       showInfo();
     } else {
-
+      cartArr.push(book);
+      setCartArr(cartArr);
     }
+  }
+
+  const removeFromCart = (book) => {
+    
   }
 
 
@@ -125,6 +131,27 @@ export default function Home() {
   ];
 
 
+
+  const cartTemplate = (book) => {
+    return (
+      <div className=" col-12 p-2" key={book.id} title={book.title}>
+        <div className="p-2 border-1 surface-border surface-card border-round w-full">
+          <div className="flex flex-column align-items-center gap-3 py-5">
+            <img className="w-2 h-3rem shadow-2 border-round" src={book.thumbnailUrl} alt={book.title} />
+            <div className="h-3rem overflow-x-auto">{book.title}</div>
+            <span >
+              <Button icon="pi pi-times" rounded severity="danger" aria-label="Cancel"
+                onClick={() => removeFromCart(book)}
+                />
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+
+
   const itemTemplate = (book) => {
     return (
       <div className=" col-12  md:col-4 lg:col-4 xl:col-4 p-2" key={book.id} title={book.title}>
@@ -134,7 +161,7 @@ export default function Home() {
             <div className="text-1xl font-bold h-3rem overflow-x-auto">{book.title}</div>
             <span >
               <Button label="Add to Cart"
-                onClick={() => checkUser(book)}
+                onClick={() => addToCart(book)}
                 severity="primary" rounded className='z-1' />
             </span>
           </div>
@@ -142,6 +169,28 @@ export default function Home() {
       </div>
     )
   }
+
+  let cart = [
+
+    {
+      template: () => {
+        return (
+        <div className="card">
+          <DataScroller value={cartArr} inline scrollHeight="500px" rows={5} itemTemplate={cartTemplate} layout='list' />
+        </div>
+        )
+      }
+    },
+    { separator: true },
+    {
+      label: 'Buy',
+      icon: 'pi pi-wallet',
+      command: () => {
+        
+        
+      }
+    },
+  ];
 
 
   // wait for fetching
@@ -167,9 +216,11 @@ export default function Home() {
               <Menu model={items} popup ref={menu} id="popup_menu_profile" popupAlignment="right"/>
               <Button icon="pi pi-align-right" className="mr-2 " onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
               
-              <i className="pi pi-shopping-cart p-overlay-badge ml-2 cursor-pointer hover:text-orange-700" style={{ fontSize: '2rem' }}>
+              <i className="pi pi-shopping-cart p-overlay-badge ml-2 cursor-pointer hover:text-orange-700 "
+              onClick={(event) => cartMenu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup style={{ fontSize: '2rem' }}>
                 <Badge value={cartArr.length}></Badge>
               </i>
+              <Menu model={cart} popup ref={cartMenu} id="popup_menu_cart"/>
             </div>
 
           )}
