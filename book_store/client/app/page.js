@@ -17,6 +17,7 @@ export default function Home() {
   const router = useRouter();
 
   const menu = useRef(null);
+  const cartMenu = useRef(null);
   const toast = useRef(null);
 
   const showInfo = () => {
@@ -163,10 +164,10 @@ export default function Home() {
             <Button icon='pi pi-sign-in' label='Login' severity="primary" rounded onClick={() => router.push('/login')} />
           ) : (
             <div className='card flex justify-content-center align-items-center'>
-              <Menu model={items} popup ref={menu} id="popup_menu_left" />
-              <Button icon="pi pi-align-right" className="mr-2" onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
+              <Menu model={items} popup ref={menu} id="popup_menu_profile" popupAlignment="right"/>
+              <Button icon="pi pi-align-right" className="mr-2 " onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
               
-              <i className="pi pi-shopping-cart p-overlay-badge ml-2" style={{ fontSize: '2rem' }}>
+              <i className="pi pi-shopping-cart p-overlay-badge ml-2 cursor-pointer hover:text-orange-700" style={{ fontSize: '2rem' }}>
                 <Badge value={cartArr.length}></Badge>
               </i>
             </div>
