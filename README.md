@@ -1,25 +1,28 @@
 # PrimeTek-Intern
 
-Projects: 
+## Projects
 
+### To-Do App
+- **Live Demo:** [To-Do App](https://prime-tek.vercel.app)
+- **Tech Stack:** Next.js, Primereact, Primeflex
 
-To-Do App: https://prime-tek.vercel.app
-  -Next.js, Primereact, Primeflex
+### Movie App
+- **Live Demo:** [Movie App](https://prime-tek-ma.vercel.app)
+- **Description:** IMDb-like Movie Web App
+- **Tech Stack:** Next.js, Primereact, Primeflex, Firebase
+- **Features:**
+  - Login using the top-right button to see movie details
+  - Theme switching using the switch button
+  - Movie search (TMDB)
 
-Movie App: https://prime-tek-ma.vercel.app
-  -IMDb-like Movie  Web App
-  -Next.js, Primereact, Primeflex, Firebase
-  -Login using top right button to see movie details
-  -Can change theme using switch button
-  -Can search movies (TMDB)
+### Weather App
+- **Live Demo:** [Weather App](https://wheather-app-xi.vercel.app)
+- **Tech Stack:** Next.js, Primereact, Primeflex
 
+### Project 1 - To Do App (JsonServer Version)
+- **Description:** To-Do App with a JsonServer backend (same front-end as To-Do App)
+- **Tech Stack:** Next.js, Primereact, Primeflex, JsonServer
 
-Wheather App: https://wheather-app-xi.vercel.app
-  -Next.js, Primereact, Primeflex
-
-project_1_jsonServer: To Do App JsonServer version (same front-end as To-Do App)
-
-book_store: not finished
--E-Book store using Node.js in back-end
--Next.js, Primereact, Primeflex, JWT, MongoDB, Node.js
-
+### Book Store (Work in Progress)
+- **Description:** E-Book store using Node.js in the backend
+- **Tech Stack:** Next.js, Primereact, Primeflex, JWT, MongoDB, Node.js
