@@ -39,12 +39,22 @@ export default function Home() {
     if (!user) {
       showInfo();
     } else {
-      cartArr.push(book);
-      setCartArr(cartArr);
+      let item = cartArr.find(item => item._id == book._id);
+      if (!item) {
+        cartArr.push(book);
+      }
+
     }
   }
 
   const removeFromCart = (book) => {
+
+    const index = cartArr.findIndex(item => item._id === book._id);
+
+    if (index > -1) {
+      cartArr.splice(index, 1);
+    }
+  
     
   }
 
