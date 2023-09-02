@@ -21,9 +21,10 @@ export default function Home() {
   const cartMenu = useRef(null);
   const toast = useRef(null);
 
-  const showInfo = () => {
-    toast.current.show({ severity: 'info', summary: 'Info', detail: 'You must be logged in in order to buy', life: 3000 });
+  const showInfo = (message, severity) => {
+    toast.current.show({ severity: severity, summary: 'Info', detail: message, life: 3000 });
   }
+
 
 
   const [data, setData] = useState([]);
@@ -31,15 +32,52 @@ export default function Home() {
   const [flag, setFlag] = useState(true);
   const [cartSize, setCartSize] = useState(0);
   const [user, setUser] = useState(null);
+
   const [isLoading1, setLoading1] = useState(true);
   const [isLoading2, setLoading2] = useState(true);
 
 
 
+  const buy = async () => {
+    if (cartSize == 0){
+      showInfo("Your cart is empty", "info");
+    }else {
+      const userId = user._id;
+      const books = cartArr;
+  
+      const response = await fetch('http://localhost:8000/api/addBook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          userId,
+          books
+        })
+      });
+  
+  
+      if (response.ok) {
+          // Set a flag in localStorage to show the alert after the page reloads
+          //localStorage.setItem('showInfoFlag', 'true');
+  
+          // Reload the current page
+          window.location.reload();
+  
+      } else {
+        showInfo("Error in buy", "error");
+  
+      }
+
+    }
+
+
+  }
+
+
 
   const addToCart = (book) => {
     if (!user) {
-      showInfo();
+      showInfo("You must be logged in in order to add book to cart", "info");
     } else {
       let item = cartArr.find(item => item._id == book._id);
       if (!item) {
@@ -106,6 +144,7 @@ export default function Home() {
 
     fetchData();
     fetchUser();
+
 
 
   }, [])
@@ -221,12 +260,12 @@ export default function Home() {
                   )
                 }
               </ul>
-  
+
             </div>
           )
 
         }
-        
+
       }
     },
     { separator: true },
@@ -234,8 +273,7 @@ export default function Home() {
       label: 'Buy',
       icon: 'pi pi-wallet',
       command: () => {
-
-
+        buy();
       }
     },
   ];

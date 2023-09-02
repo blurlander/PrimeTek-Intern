@@ -7,7 +7,7 @@ const librarySchema = new mongoose.Schema({
         unique: true
     },
     library: {
-        type: [String],
+        type: [Object],
         required: true
     },
     // Define your schema fields here

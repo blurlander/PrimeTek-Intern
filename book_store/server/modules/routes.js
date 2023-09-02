@@ -97,7 +97,8 @@ router.post('/addBook', async (req, res) => {
         }
 
         const books = req.body.books;
-        userLibrary.library = userLibrary.library.concat(books);
+        const uniqueBooks = removeDuplicates(userLibrary.library, books);
+        userLibrary.library = userLibrary.library.concat(uniqueBooks);
 
         await userLibrary.save();
 
@@ -107,7 +108,21 @@ router.post('/addBook', async (req, res) => {
         // Handle errors, e.g., validation errors or database errors
         res.status(400).json({ error: error.message });
     }
-})
+});
+
+// Helper function to remove duplicates from an array of objects based on a specific property
+function removeDuplicates(existingLibrary, booksToAdd) {
+    const uniqueBooksToAdd = [];
+    const existingBookIds = new Set(existingLibrary.map(book => book["_id"]));
+
+    for (const book of booksToAdd) {
+        if (!existingBookIds.has(book["_id"])) {
+            uniqueBooksToAdd.push(book);
+        }
+    }
+    
+    return uniqueBooksToAdd;
+}
 
 router.get('/library', async (req, res) => {
     try {
