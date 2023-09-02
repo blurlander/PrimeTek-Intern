@@ -1,23 +1,32 @@
 const router = require('express').Router();
 const User = require('./users');
+const Library = require('./libraries');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 router.post('/register', async (req, res) => {
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: hashedPassword,
-    })
+    });
 
-    const result = await user.save()
+    const library = new Library({
+        userId: user._id,
+        library: []
+    });
 
-    const {password, ...data} = await result.toJSON()
+    const result = await user.save();
+    await library.save();
 
-    res.send(data)
+    const {password, ...data} = await result.toJSON();
+
+    res.send(data);
+
+
 })
 
 router.post('/login', async (req, res) => {
@@ -77,6 +86,41 @@ router.post('/logout', (req, res) => {
     res.send({
         message: 'success'
     })
+})
+
+router.post('/addBook', async (req, res) => {
+    try {
+        const userLibrary = await Library.findOne({ userId: req.body.userId });
+        
+        if (!userLibrary) {
+            return res.status(404).json({ error: 'User library not found' });
+        }
+
+        const books = req.body.books;
+        userLibrary.library = userLibrary.library.concat(books);
+
+        await userLibrary.save();
+
+        const { library, ...data } = await userLibrary.toJSON();
+        res.send(data);
+    } catch (error) {
+        // Handle errors, e.g., validation errors or database errors
+        res.status(400).json({ error: error.message });
+    }
+})
+
+router.get('/library', async (req, res) => {
+    try {
+        const userLibrary = await Library.findOne({userId: req.body.userId})
+
+        const {library, ...data} = await userLibrary.toJSON()
+
+        res.send(library)
+    } catch (e) {
+        return res.status(401).send({
+            message: 'Error in get library'
+        })
+    }
 })
 
 module.exports = router;
