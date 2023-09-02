@@ -28,6 +28,8 @@ export default function Home() {
 
   const [data, setData] = useState([]);
   const [cartArr, setCartArr] = useState([]);
+  const [flag, setFlag] = useState(true);
+  const [cartSize, setCartSize] = useState(0);
   const [user, setUser] = useState(null);
   const [isLoading1, setLoading1] = useState(true);
   const [isLoading2, setLoading2] = useState(true);
@@ -42,6 +44,7 @@ export default function Home() {
       let item = cartArr.find(item => item._id == book._id);
       if (!item) {
         cartArr.push(book);
+        setFlag(!flag);
       }
 
     }
@@ -53,9 +56,8 @@ export default function Home() {
 
     if (index > -1) {
       cartArr.splice(index, 1);
+      setFlag(!flag);
     }
-  
-    
   }
 
 
@@ -108,11 +110,17 @@ export default function Home() {
 
   }, [])
 
-  // Log the state in a separate useEffect to capture the updated values
   useEffect(() => {
+    setCartSize(cartArr.length);
+    console.log(cartSize);
+
+  }, [flag])
+
+  // Log the state in a separate useEffect to capture the updated values
+  /*useEffect(() => {
     console.log(data);
     console.log(user);
-  }, [data, user]);
+  }, [data, user]); */
 
 
   let items = [
@@ -152,7 +160,7 @@ export default function Home() {
             <span >
               <Button icon="pi pi-times" rounded severity="danger" aria-label="Cancel"
                 onClick={() => removeFromCart(book)}
-                />
+              />
             </span>
           </div>
         </div>
@@ -184,11 +192,41 @@ export default function Home() {
 
     {
       template: () => {
-        return (
-        <div className="card">
-          <DataScroller value={cartArr} inline scrollHeight="500px" rows={5} itemTemplate={cartTemplate} layout='list' />
-        </div>
-        )
+        if (cartSize == 0) {
+          return (
+            <h5>Cart is empty</h5>
+
+          )
+        } else {
+          return (
+            <div className="card">
+              <ul className='overflow-auto max-h-24rem'>
+                {
+                  cartArr.map(book =>
+                    <li key={book._id}>
+                      <div className=" col-12 p-2" title={book.title}>
+                        <div className="p-2 border-1 surface-border surface-card border-round w-full">
+                          <div className="flex flex-column align-items-center gap-3 py-5">
+                            <img className="w-2 h-3rem shadow-2 border-round" src={book.thumbnailUrl} alt={book.title} />
+                            <div className="h-3rem overflow-x-auto">{book.title}</div>
+                            <span >
+                              <Button icon="pi pi-times" rounded severity="danger" aria-label="Cancel"
+                                onClick={() => removeFromCart(book)}
+                              />
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  )
+                }
+              </ul>
+  
+            </div>
+          )
+
+        }
+        
       }
     },
     { separator: true },
@@ -196,8 +234,8 @@ export default function Home() {
       label: 'Buy',
       icon: 'pi pi-wallet',
       command: () => {
-        
-        
+
+
       }
     },
   ];
@@ -223,14 +261,14 @@ export default function Home() {
             <Button icon='pi pi-sign-in' label='Login' severity="primary" rounded onClick={() => router.push('/login')} />
           ) : (
             <div className='card flex justify-content-center align-items-center'>
-              <Menu model={items} popup ref={menu} id="popup_menu_profile" popupAlignment="right"/>
+              <Menu model={items} popup ref={menu} id="popup_menu_profile" popupAlignment="right" />
               <Button icon="pi pi-align-right" className="mr-2 " onClick={(event) => menu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup />
-              
+
               <i className="pi pi-shopping-cart p-overlay-badge ml-2 cursor-pointer hover:text-orange-700 "
-              onClick={(event) => cartMenu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup style={{ fontSize: '2rem' }}>
-                <Badge value={cartArr.length}></Badge>
+                onClick={(event) => cartMenu.current.toggle(event)} aria-controls="popup_menu" aria-haspopup style={{ fontSize: '2rem' }}>
+                <Badge value={cartSize}></Badge>
               </i>
-              <Menu model={cart} popup ref={cartMenu} id="popup_menu_cart"/>
+              <Menu model={cart} popup ref={cartMenu} id="popup_menu_cart" />
             </div>
 
           )}
