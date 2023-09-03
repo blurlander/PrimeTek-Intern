@@ -126,15 +126,17 @@ function removeDuplicates(existingLibrary, booksToAdd) {
 
 router.get('/library', async (req, res) => {
     try {
-        const userLibrary = await Library.findOne({userId: req.body.userId})
+        const userId = req.query.userId; // Extract userId from query parameters
+        const userLibrary = await Library.findOne({ userId });
 
         const {library, ...data} = await userLibrary.toJSON()
 
         res.send(library)
     } catch (e) {
-        return res.status(401).send({
-            message: 'Error in get library'
-        })
+        console.error("Error: ", e);
+        return res.status(500).send({
+          message: 'Error in get library',
+        });
     }
 })
 

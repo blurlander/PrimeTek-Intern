@@ -3,13 +3,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
-import { DataScroller } from 'primereact/datascroller';
 import { useRouter } from 'next/navigation'
 import { Menu } from 'primereact/menu';
 import { Avatar } from 'primereact/avatar';
 import axios from '../node_modules/axios';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
+import Link from 'next/link';
 
 
 
@@ -33,18 +33,19 @@ export default function Home() {
   const [cartSize, setCartSize] = useState(0);
   const [user, setUser] = useState(null);
 
+
   const [isLoading1, setLoading1] = useState(true);
   const [isLoading2, setLoading2] = useState(true);
 
 
 
   const buy = async () => {
-    if (cartSize == 0){
+    if (cartSize == 0) {
       showInfo("Your cart is empty", "info");
-    }else {
+    } else {
       const userId = user._id;
       const books = cartArr;
-  
+
       const response = await fetch('http://localhost:8000/api/addBook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,18 +55,18 @@ export default function Home() {
           books
         })
       });
-  
-  
+
+
       if (response.ok) {
-          // Set a flag in localStorage to show the alert after the page reloads
-          //localStorage.setItem('showInfoFlag', 'true');
-  
-          // Reload the current page
-          window.location.reload();
-  
+        // Set a flag in localStorage to show the alert after the page reloads
+        //localStorage.setItem('showInfoFlag', 'true');
+
+        // Reload the current page
+        window.location.reload();
+
       } else {
         showInfo("Error in buy", "error");
-  
+
       }
 
     }
@@ -155,12 +156,6 @@ export default function Home() {
 
   }, [flag])
 
-  // Log the state in a separate useEffect to capture the updated values
-  /*useEffect(() => {
-    console.log(data);
-    console.log(user);
-  }, [data, user]); */
-
 
   let items = [
 
@@ -187,25 +182,6 @@ export default function Home() {
     },
   ];
 
-
-
-  const cartTemplate = (book) => {
-    return (
-      <div className=" col-12 p-2" key={book.id} title={book.title}>
-        <div className="p-2 border-1 surface-border surface-card border-round w-full">
-          <div className="flex flex-column align-items-center gap-3 py-5">
-            <img className="w-2 h-3rem shadow-2 border-round" src={book.thumbnailUrl} alt={book.title} />
-            <div className="h-3rem overflow-x-auto">{book.title}</div>
-            <span >
-              <Button icon="pi pi-times" rounded severity="danger" aria-label="Cancel"
-                onClick={() => removeFromCart(book)}
-              />
-            </span>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
 
 
@@ -286,14 +262,30 @@ export default function Home() {
     <main className="z-1 flex grid  justify-content-center align-items-center gap-3 surface-300">
       <Toast ref={toast} />
       <div className="flex col-12 grid w-screen top-0 grid mb-8 justify-content-center align-items-center bg-white" >
-        <div className='col-4 md:col-2 lg:col-2'>
+        <div className='col-4 md:col-2 lg:col-2 '>
           <h1 className='brand w-auto ml-3 sm:h-1rem md:h-2rem lg:h-2rem'>PrimE-Books</h1>
         </div>
 
-        <div className='col-1'>
-          <Button icon="pi pi-home" severity="secondary" aria-label="Home Page" onClick={() => router.push('/')} />
+        <div className='md:col-1 sm:col-2 '>
+          <Link href={{ pathname: '/' }} className='hover:text-orange-700'
+          style={{
+            textDecoration: 'none',
+            color: 'black',
+            fontWeight: 'bold',
+            fontSize: '1.1rem'
+          }}>Home</Link>
         </div>
-        <div className='col-4'></div>
+        <div className='md:col-1 sm:col-2'>
+          <Link href={{
+            pathname: '/library/'.concat(user._id),
+          }} className='hover:text-orange-700' style={{
+            textDecoration: 'none',
+            color: 'black',
+            fontWeight: 'bold',
+            fontSize: '1.1rem'
+          }}>Library</Link>
+        </div>
+        <div className='col-2'></div>
         <div className='col-2 flex justify-content-center align-items-center'>
           {!user ? (
             <Button icon='pi pi-sign-in' label='Login' severity="primary" rounded onClick={() => router.push('/login')} />
