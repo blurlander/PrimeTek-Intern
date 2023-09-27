@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 
 
 
-const ToDoList = (props) => {
+const ToDoList = () => {
 
     const toast = useRef(null);
 
@@ -42,7 +42,7 @@ const ToDoList = (props) => {
 
     // Get data from local storage in first render
     useEffect(() => {
-      let arr;
+      let arr = [];
 
         //Get data from localStorage to "toDos"
       try{
