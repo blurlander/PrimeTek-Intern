@@ -1,3 +1,1 @@
-vercel link:
-
-https://prime-tek.vercel.app
+- **Live Demo:** [To-Do App](https://todo-2hv6aliya-efe760.vercel.app/)
